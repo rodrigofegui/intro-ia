@@ -87,6 +87,21 @@ def depthFirstSearch(problem, t=False):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
+    from game import Directions
+
+    n, s, e, w = Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST
+    # n > s > e > w
+    
+    # (int:, int:):state => cresce para direita e para cima
+    
+    print("Start:", problem.getStartState())
+    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+
+    # return [].append(int:intermediario(problem, (int, int):c_pos)).reverse
+    
+    return [s, s, w, s, w, w, s, w] # resposta válida
+    
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):

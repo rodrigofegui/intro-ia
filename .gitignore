@@ -1,0 +1,7 @@
+# Directory created by text editors
+.vscode
+
+# Automatically created cache files
+__pycache__
+*pyc
+

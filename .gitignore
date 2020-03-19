@@ -1,7 +1,10 @@
-# Directory created by text editors
+# Ambientes Virtuais criados
+.proj*
+
+# Diretórios criados por editores de texto
 .vscode
 
-# Automatically created cache files
+# Cache criado automaticamente
 __pycache__
 *pyc
 

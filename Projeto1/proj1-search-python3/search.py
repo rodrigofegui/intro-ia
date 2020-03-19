@@ -19,6 +19,7 @@ Pacman agents (in searchAgents.py).
 
 import util
 
+
 class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
@@ -72,7 +73,7 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
-def depthFirstSearch(problem, t=False):
+def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
 
@@ -86,23 +87,40 @@ def depthFirstSearch(problem, t=False):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    "*** YOUR CODE HERE ***"
-    from game import Directions
+    problem.percurso = []
 
-    n, s, e, w = Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST
-    # n > s > e > w
-    
-    # (int:, int:):state => cresce para direita e para cima
-    
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+    for proximo in problem.getSuccessors(problem.getStartState()):
+        problem.percurso.append(proximo[1])
+        encontrou, _ = inter_dfs(problem, proximo, 0)
 
-    # return [].append(int:intermediario(problem, (int, int):c_pos)).reverse
+        if encontrou:
+            return problem.percurso
+
+    return []
+
+def inter_dfs(problema, atual, nivel):
+    print(nivel * 4 * ' ', '+', atual[1], atual[0])
     
-    return [s, s, w, s, w, w, s, w] # resposta válida
-    
-    util.raiseNotDefined()
+    if problema.isGoalState(atual[0]):
+        return True, False
+
+    if atual[0] in problema._visitedlist:
+        return False, True
+
+    problema._visitedlist.append(atual[0])
+
+    for proximo in problema.getSuccessors(atual[0]):
+        problema.percurso.append(proximo[1])
+
+        encontrou, apagar_rastro = inter_dfs(problema, proximo, nivel + 1)
+
+        if encontrou:
+            return True, False
+
+        if apagar_rastro:
+            print((nivel + 1) * 4 * ' ', '-', problema.percurso.pop())
+
+    return False, True
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""

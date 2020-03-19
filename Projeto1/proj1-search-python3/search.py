@@ -88,38 +88,68 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     problem.percurso = []
+    rastreamento = {
+        'nivel': 0,
+        'ativo': False,
+    }
 
     for proximo in problem.getSuccessors(problem.getStartState()):
         problem.percurso.append(proximo[1])
-        encontrou, _ = inter_dfs(problem, proximo, 0)
+        encontrou, _ = inter_dfs(problem, proximo, rastreamento)
 
         if encontrou:
             return problem.percurso
 
     return []
 
-def inter_dfs(problema, atual, nivel):
-    print(nivel * 4 * ' ', '+', atual[1], atual[0])
+def inter_dfs(problem, atual, rastreamento={}):
+    """Intermediário para o DFS. Passando pelas assertivas, o `atual`
+    é adicionado à lista de visitados e o processo de repete para seus
+    vizinhos.
+
+    Assertivas:
+    - `atual` é o objetivo
+    - `atual` já foi visitado
+
+    Argumentos:
+    - `PositionSearchProblem:problem`: Problema a ser resolvido
+    - `tuple:atual`: Estado atual do Pacman, tupla de três itens:
+        1. `(int:, int:):posicao`: Posição no tabuleiro
+        2. `str:acao`: Ação tomada na última posição para chegar à `atual`
+        3. `int:custo`: Custo de chegada ao estado atual
+    - `dict:rastreamento`: Controle de rastreamento em desenvolvimento, com
+    dois campos:
+        - `bool:ativo`: Ativação ou não do rastremanto
+        - `int:nivel`: Altura da árvore em análise
+
+    Returno:
+    - `(bool:encontrou, bool:apagar_rastro)` para controle das chamadas recursivas
+    """
+    if rastreamento.get('ativo'):
+        print(rastreamento.get(nivel) * 4 * ' ', '+', atual[1], atual[0])
     
-    if problema.isGoalState(atual[0]):
+    if problem.isGoalState(atual[0]):
         return True, False
 
-    if atual[0] in problema._visitedlist:
+    if atual[0] in problem._visitedlist:
         return False, True
 
-    problema._visitedlist.append(atual[0])
+    problem._visitedlist.append(atual[0])
 
-    for proximo in problema.getSuccessors(atual[0]):
-        problema.percurso.append(proximo[1])
+    for proximo in problem.getSuccessors(atual[0]):
+        problem.percurso.append(proximo[1])
 
-        encontrou, apagar_rastro = inter_dfs(problema, proximo, nivel + 1)
+        encontrou, apagar_rastro = inter_dfs(problem, proximo, rastreamento)
 
         if encontrou:
             return True, False
 
         if apagar_rastro:
-            print((nivel + 1) * 4 * ' ', '-', problema.percurso.pop())
-
+            if rastreamento.get('ativo'):
+                print((rastreamento.get(nivel) + 1) * 4 * ' ', '-', problem.percurso.pop())
+            else:
+                problem.percurso.pop()
+ 
     return False, True
 
 def breadthFirstSearch(problem):

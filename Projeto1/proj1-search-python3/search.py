@@ -88,16 +88,18 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     inicial = problem.getStartState()
-    problem.percurso = []
-    problem.visitados = [inicial]
     rastreamento = {
         'nivel': 0,
         'ativo': False,
     }
 
+    problem.percurso = []
+    problem.visitados = [inicial]
+
     for proximo in problem.getSuccessors(inicial):
         problem.percurso.append(proximo[1])
-        encontrou, _ = inter_dfs(problem, proximo, rastreamento)
+
+        encontrou = inter_dfs(problem, proximo, rastreamento)
 
         if encontrou:
             return problem.percurso
@@ -112,8 +114,8 @@ def inter_dfs(problem, atual, rastreamento={}):
     vizinhos.
 
     Assertivas:
-    - `atual` é o objetivo
-    - `atual` já foi visitado
+    - `atual` é o objetivo: True
+    - `atual` já foi visitado: False
 
     Argumentos:
     - `PositionSearchProblem:problem`: Problema a ser resolvido
@@ -127,34 +129,33 @@ def inter_dfs(problem, atual, rastreamento={}):
         - `int:nivel`: Altura da árvore em análise
 
     Returno:
-    - `(bool:encontrou, bool:apagar_rastro)` para controle das chamadas recursivas
+    - `(bool:encontrou)`
     """
     if rastreamento.get('ativo'):
         print(rastreamento.get(nivel) * 4 * ' ', '+', atual[1], atual[0])
     
     if problem.isGoalState(atual[0]):
-        return True, False
+        return True
 
     if atual[0] in problem.visitados:
-        return False, True
+        return False
 
     problem.visitados.append(atual[0])
 
     for proximo in problem.getSuccessors(atual[0]):
         problem.percurso.append(proximo[1])
 
-        encontrou, apagar_rastro = inter_dfs(problem, proximo, rastreamento)
+        encontrou = inter_dfs(problem, proximo, rastreamento)
 
         if encontrou:
-            return True, False
+            return True
 
-        if apagar_rastro:
-            if rastreamento.get('ativo'):
-                print((rastreamento.get(nivel) + 1) * 4 * ' ', '-', problem.percurso.pop())
-            else:
-                problem.percurso.pop()
+        if rastreamento.get('ativo'):
+            print((rastreamento.get(nivel) + 1) * 4 * ' ', '-', problem.percurso.pop())
+        else:
+            problem.percurso.pop()
  
-    return False, True
+    return False
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""

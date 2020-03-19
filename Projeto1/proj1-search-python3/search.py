@@ -87,18 +87,22 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
+    inicial = problem.getStartState()
     problem.percurso = []
+    problem.visitados = [inicial]
     rastreamento = {
         'nivel': 0,
         'ativo': False,
     }
 
-    for proximo in problem.getSuccessors(problem.getStartState()):
+    for proximo in problem.getSuccessors(inicial):
         problem.percurso.append(proximo[1])
         encontrou, _ = inter_dfs(problem, proximo, rastreamento)
 
         if encontrou:
             return problem.percurso
+
+        problem.percurso.pop()
 
     return []
 
@@ -131,10 +135,10 @@ def inter_dfs(problem, atual, rastreamento={}):
     if problem.isGoalState(atual[0]):
         return True, False
 
-    if atual[0] in problem._visitedlist:
+    if atual[0] in problem.visitados:
         return False, True
 
-    problem._visitedlist.append(atual[0])
+    problem.visitados.append(atual[0])
 
     for proximo in problem.getSuccessors(atual[0]):
         problem.percurso.append(proximo[1])
